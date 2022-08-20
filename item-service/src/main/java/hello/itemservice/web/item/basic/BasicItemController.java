@@ -36,45 +36,45 @@ public class BasicItemController {
         return "basic/addForm";
     }
 
-    @PostMapping("/add")
-    public String addItemV1(@RequestParam String itemName,
-                            @RequestParam int price,
-                            @RequestParam Integer quantity,
-                            Model model) {
-        Item item = new Item();
-        item.setItemName(itemName);
-        item.setPrice(price);
-        item.setQuantity(quantity);
-
-        itemRepository.save(item);
-
-        model.addAttribute("item", item);
-
-        return "basic/item";
-    }
-
-    /**
-     * @ModelAttribute
-     * - Item 객체 생성하고, 요청 파라미터의 값을 입력해준다
-     * - 모델에 @ModelAttribute로 지정한 객체를 자동으로 넣어준다.
-     *  model.addAttribute("item", item) 생략 가능
-     */
-    @PostMapping("/add")
-    public String addItemV2(@ModelAttribute("item") Item item) {
-        itemRepository.save(item);
-        //model.addAttribute("item", item)
-        return "basic/item";
-    }
-
-    /**
-     * @ModelAttribute name 생략 가능
-     *생략시 model에 저장되는 name은 클래스명 첫글자만 소문자로 등록
-     */
-    @PostMapping("/add")
-    public String addItemV3(@ModelAttribute Item item) {
-        itemRepository.save(item);
-        return "basic/item";
-    }
+//    @PostMapping("/add")
+//    public String addItemV1(@RequestParam String itemName,
+//                            @RequestParam int price,
+//                            @RequestParam Integer quantity,
+//                            Model model) {
+//        Item item = new Item();
+//        item.setItemName(itemName);
+//        item.setPrice(price);
+//        item.setQuantity(quantity);
+//
+//        itemRepository.save(item);
+//
+//        model.addAttribute("item", item);
+//
+//        return "basic/item";
+//    }
+//
+//    /**
+//     * @ModelAttribute
+//     * - Item 객체 생성하고, 요청 파라미터의 값을 입력해준다
+//     * - 모델에 @ModelAttribute로 지정한 객체를 자동으로 넣어준다.
+//     *  model.addAttribute("item", item) 생략 가능
+//     */
+//    @PostMapping("/add")
+//    public String addItemV2(@ModelAttribute("item") Item item) {
+//        itemRepository.save(item);
+//        //model.addAttribute("item", item)
+//        return "basic/item";
+//    }
+//
+//    /**
+//     * @ModelAttribute name 생략 가능
+//     *생략시 model에 저장되는 name은 클래스명 첫글자만 소문자로 등록
+//     */
+//    @PostMapping("/add")
+//    public String addItemV3(@ModelAttribute Item item) {
+//        itemRepository.save(item);
+//        return "basic/item";
+//    }
 
     /**
      * @ModelAttribute 자체도 생략 가능
@@ -83,6 +83,19 @@ public class BasicItemController {
     public String addItemV4(Item item) {
         itemRepository.save(item);
         return "basic/item";
+    }
+
+    @GetMapping("/{itemId}/edit")
+    public String editForm(@PathVariable Long itemId, Model model) {
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/editForm";
+    }
+
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
+        itemRepository.update(itemId, item);
+        return "redirect:/basic/items/{itemId}";
     }
 
     /**
